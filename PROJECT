@@ -1,0 +1,11 @@
+domain: load-operator.com
+layout: go.kubebuilder.io/v2
+multigroup: true
+repo: github.com/kozmod/load-operator
+resources:
+- group: cache
+  kind: LoadService
+  version: v1
+version: 3-alpha
+plugins:
+  go.operator-sdk.io/v2-alpha: {}

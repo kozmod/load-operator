@@ -1,0 +1,7 @@
+apiVersion: cache.load-operator.com/v1
+kind: LoadService
+metadata:
+  name: loadservice-sample
+spec:
+  # Add fields here
+  foo: bar
