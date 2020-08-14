@@ -25,9 +25,9 @@ import (
 
 // LoadServiceSpec defines the desired state of LoadService
 type LoadServiceSpec struct {
-	Namespace      string `json:"namespace"`
-	DeploymentName string `json:"deployment_name"`
-	Delay          string `json:"delay"`
+	Namespace      string          `json:"namespace"`
+	DeploymentName string          `json:"deployment_name"`
+	Delay          metav1.Duration `json:"delay"`
 }
 
 // LoadServiceStatus defines the observed state of LoadService

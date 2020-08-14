@@ -3,5 +3,6 @@ kind: LoadService
 metadata:
   name: loadservice-sample
 spec:
-  # Add fields here
-  foo: bar
+  namespace: default
+  deployment_name: go-http2-server
+  delay: 10s

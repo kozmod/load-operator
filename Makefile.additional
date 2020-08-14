@@ -1,0 +1,2 @@
+metrics-server:
+	kubectl apply -f ../config/metrics-server/components.yaml
