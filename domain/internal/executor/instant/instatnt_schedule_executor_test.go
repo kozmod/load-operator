@@ -19,6 +19,7 @@ func TestExecutor_ShouldStopByTimeout(t *testing.T) {
 	case <-res:
 		t.Fail()
 	case <-ctx.Done():
-		cancel()
+		break
 	}
+	cancel()
 }
