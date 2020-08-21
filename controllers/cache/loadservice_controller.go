@@ -21,8 +21,6 @@ import (
 	"github.com/go-logr/logr"
 	cachev1 "github.com/kozmod/load-operator/apis/cache/v1"
 	"github.com/kozmod/load-operator/domain/metrics/usecase"
-	appsv1 "k8s.io/api/apps/v1"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/rest"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -53,7 +51,7 @@ func (r *LoadServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 	if err := r.Get(ctx, req.NamespacedName, loadService); err != nil {
 		return ctrl.Result{}, err
 	}
-	config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:61501"}) //todo local test
+	config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:64174"}) //todo local test
 	//config := rest.InClusterConfig() //todo in cluster
 	//if err != nil {
 	//	fmt.Println("rest error")
@@ -67,25 +65,6 @@ func (r *LoadServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 	}
 
 	return ctrl.Result{}, nil
-}
-
-func (r *LoadServiceReconciler) getPodList(ctx context.Context, namespace, deploymentName string) (*corev1.PodList, error) {
-	deployment := &appsv1.Deployment{}
-	if err := r.Get(ctx, client.ObjectKey{
-		Namespace: namespace,
-		Name:      deploymentName,
-	}, deployment); err != nil {
-		return nil, err
-	}
-
-	pods := &corev1.PodList{}
-	opts := []client.ListOption{
-		client.InNamespace(namespace),
-		client.MatchingLabels{appLabel: deployment.Spec.Selector.MatchLabels[appLabel]}}
-	if err := r.List(ctx, pods, opts...); err != nil {
-		return nil, err
-	}
-	return pods, nil
 }
 
 func (r *LoadServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
