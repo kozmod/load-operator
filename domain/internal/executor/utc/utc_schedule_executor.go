@@ -1,36 +1,37 @@
-package executor
+package utc
 
 import (
 	"context"
+	"github.com/kozmod/load-operator/domain/internal/executor"
 	"time"
 )
 
 const defaultDuration = 1 * time.Second
 
-type UtcScheduleExecutor struct {
+type ScheduleExecutor struct {
 	start     *time.Time
 	duration  time.Duration
 	executeFn func()
 }
 
-type Option func(*UtcScheduleExecutor)
+type Option func(*ScheduleExecutor)
 
 func WithUtcStart(start time.Time) Option {
-	return func(executor *UtcScheduleExecutor) {
+	return func(executor *ScheduleExecutor) {
 		utc := asUtc(start)
 		executor.start = &utc
 	}
 }
 
-func NewScheduleExecutor(duration time.Duration, execute func(), opts ...Option) ScheduleExecutor {
-	executor := &UtcScheduleExecutor{duration: duration, executeFn: execute}
+func NewScheduleExecutor(duration time.Duration, execute func(), opts ...Option) executor.ScheduleExecutor {
+	e := &ScheduleExecutor{duration: duration, executeFn: execute}
 	for _, opt := range opts {
-		opt(executor)
+		opt(e)
 	}
-	return executor
+	return e
 }
 
-func (s *UtcScheduleExecutor) Schedule(ctx context.Context) {
+func (s *ScheduleExecutor) Schedule(ctx context.Context) {
 	currentTime := time.Now().UTC()
 	duration := betweenOrDefault(&currentTime, s.start, defaultDuration)
 	duration = defaultIfNotPositive(duration, defaultDuration)
@@ -39,7 +40,7 @@ func (s *UtcScheduleExecutor) Schedule(ctx context.Context) {
 		select {
 		case <-timer.C:
 			timer = time.NewTimer(s.duration)
-			s.executeFn()
+			go s.executeFn()
 		case <-ctx.Done():
 			timer.Stop()
 			return

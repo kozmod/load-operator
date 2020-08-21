@@ -1,4 +1,4 @@
-package executor
+package utc
 
 import (
 	"context"
@@ -62,11 +62,11 @@ func TestDefaultIfNotPositive_Val(t *testing.T) {
 	require.Equal(t, defaultIfNotPositive(val, def), val)
 }
 
-func TestExecutor_ShouldStopByCencel(t *testing.T) {
+func TestExecutor_ShouldStopByCancel(t *testing.T) {
 	start := time.Now().Add(1 * time.Second)
 	duration := 1 * time.Second
 	ctx, cancel := context.WithCancel(context.TODO())
-	es := &UtcScheduleExecutor{start: &start, duration: duration,
+	es := &ScheduleExecutor{start: &start, duration: duration,
 		executeFn: func() {
 			t.Fatal()
 		}}
@@ -78,21 +78,26 @@ func TestExecutor_ShouldStopByCencel(t *testing.T) {
 func TestExecutor_ShouldStopByTimeout(t *testing.T) {
 	start := time.Now().Add(1 * time.Second)
 	duration := 1 * time.Second
+	res := make(chan struct{})
 	ctx, cancel := context.WithTimeout(context.TODO(), 1*time.Microsecond)
-	es := &UtcScheduleExecutor{start: &start, duration: duration,
+	es := &ScheduleExecutor{start: &start, duration: duration,
 		executeFn: func() {
-			go t.Fatal()
+			res <- struct{}{}
 		}}
 	go es.Schedule(ctx)
-	<-ctx.Done()
-	cancel()
+	select {
+	case <-res:
+		t.Fail()
+	case <-ctx.Done():
+		cancel()
+	}
 }
 
 func TestOption_WithUtcStart_CastCurrentToUtc(t *testing.T) {
 	location, _ := time.LoadLocation("America/New_York")
 	locationDate := time.Date(2020, 1, 1, 8, 1, 1, 1, location)
 
-	es := &UtcScheduleExecutor{}
+	es := &ScheduleExecutor{}
 	option := WithUtcStart(locationDate)
 	option(es)
 	require.NotNil(t, es.duration)
@@ -109,7 +114,7 @@ func TestOption_WithUtcStart_CastCurrentToUtc(t *testing.T) {
 
 func TestOption_WithUtcStart(t *testing.T) {
 	current := time.Now()
-	es := &UtcScheduleExecutor{}
+	es := &ScheduleExecutor{}
 	option := WithUtcStart(current)
 	option(es)
 	require.NotNil(t, es.duration)
