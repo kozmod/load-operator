@@ -1,0 +1,14 @@
+apiVersion: load.load-operator.com/v1alpha1
+kind: HttpLoadService
+metadata:
+  name: httploadservice-sample
+spec:
+  name: test_loader
+  rate_freq: 1000
+  rate_per: 1s
+  duration: 10h
+  target:
+    method: GET
+    url: http://go-http2-server:80/hp
+    header:
+      Host: ["xxx.com"]

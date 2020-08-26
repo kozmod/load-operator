@@ -1,0 +1,20 @@
+# permissions for end users to view httploadservices.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: httploadservice-viewer-role
+rules:
+- apiGroups:
+  - load.load-operator.com
+  resources:
+  - httploadservices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - load.load-operator.com
+  resources:
+  - httploadservices/status
+  verbs:
+  - get

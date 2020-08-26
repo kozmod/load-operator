@@ -1,13 +1,13 @@
-# permissions for end users to edit loadservices.
+# permissions for end users to edit httploadservices.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: loadservice-editor-role
+  name: httploadservice-editor-role
 rules:
 - apiGroups:
-  - cache.load-operator.com
+  - load.load-operator.com
   resources:
-  - loadservices
+  - httploadservices
   verbs:
   - create
   - delete
@@ -17,8 +17,8 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cache.load-operator.com
+  - load.load-operator.com
   resources:
-  - loadservices/status
+  - httploadservices/status
   verbs:
   - get

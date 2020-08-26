@@ -1,3 +1,5 @@
-## This file is auto-generated, do not modify ##
+## Append samples you want in your CSV to this file as resources ##
 resources:
-- cache_v1_loadservice.yaml
+- load_v1alpha1_metricsservice.yaml
+- load_v1alpha1_httploadservice.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

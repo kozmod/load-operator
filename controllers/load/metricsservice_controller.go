@@ -19,56 +19,47 @@ package controllers
 import (
 	"context"
 	"github.com/go-logr/logr"
-	cachev1 "github.com/kozmod/load-operator/apis/cache/v1"
 	"github.com/kozmod/load-operator/domain/metrics/usecase"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/rest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"time"
+
+	loadv1alpha1 "github.com/kozmod/load-operator/apis/load/v1alpha1"
 )
 
-const appLabel = "app"
-
-// LoadServiceReconciler reconciles a LoadService object
-type LoadServiceReconciler struct {
+// MetricsServiceReconciler reconciles a MetricsService object
+type MetricsServiceReconciler struct {
 	client.Client
 	Log    logr.Logger
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=cache.load-operator.com,resources=loadservices,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=cache.load-operator.com,resources=loadservices/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=load.load-operator.com,resources=metricsservices,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=load.load-operator.com,resources=metricsservices/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;
 
-func (r *LoadServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
+func (r *MetricsServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	l := r.Log.WithValues("loadservice", req.NamespacedName)
 
 	// your logic here
-	loadService := &cachev1.LoadService{}
-	if err := r.Get(ctx, req.NamespacedName, loadService); err != nil {
+	metrics := &loadv1alpha1.MetricsService{}
+	if err := r.Get(ctx, req.NamespacedName, metrics); err != nil {
 		return ctrl.Result{}, err
 	}
-	config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:64931"}) //todo local test
-	//config := rest.InClusterConfig() //todo in cluster
-	//if err != nil {
-	//	fmt.Println("rest error")
-	//	panic(err.Error())
-	//}
-	uc := usecase.TryInit(config, r.Client, l)
-
-	if err := uc.Apply(ctx, *loadService.DeepCopy()); err != nil {
-		r.Log.Error(err, "usecase error")
+	usecase.InitScheduleUseCase(r.Client, l)
+	if err := usecase.Schedule(ctx, *metrics.DeepCopy()); err != nil {
+		r.Log.Error(err, "use case error")
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 	}
 
 	return ctrl.Result{}, nil
 }
 
-func (r *LoadServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *MetricsServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&cachev1.LoadService{}).
+		For(&loadv1alpha1.MetricsService{}).
 		Complete(r)
 }

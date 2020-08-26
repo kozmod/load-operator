@@ -6,20 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.3.0
   creationTimestamp: null
-  name: loadservices.cache.load-operator.com
+  name: httploadservices.load.load-operator.com
 spec:
-  group: cache.load-operator.com
+  group: load.load-operator.com
   names:
-    kind: LoadService
-    listKind: LoadServiceList
-    plural: loadservices
-    singular: loadservice
+    kind: HttpLoadService
+    listKind: HttpLoadServiceList
+    plural: httploadservices
+    singular: httploadservice
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: LoadService is the Schema for the loadservices API
+      description: HttpLoadService is the Schema for the httploadservices API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -34,65 +34,46 @@ spec:
         metadata:
           type: object
         spec:
-          description: LoadServiceSpec defines the desired state of LoadService
+          description: HttpLoadServiceSpec defines the desired state of HttpLoadService
           properties:
-            loader:
+            duration:
+              type: string
+            name:
+              type: string
+            rate_freq:
+              type: integer
+            rate_per:
+              type: string
+            target:
               properties:
-                duration:
-                  type: string
-                name:
-                  type: string
-                rate_freq:
-                  type: integer
-                rate_per:
-                  type: string
-                target:
-                  properties:
-                    header:
-                      additionalProperties:
-                        items:
-                          type: string
-                        type: array
-                      type: object
-                    method:
+                header:
+                  additionalProperties:
+                    items:
                       type: string
-                    url:
-                      type: string
-                  required:
-                  - method
-                  - url
+                    type: array
                   type: object
-              required:
-              - duration
-              - name
-              - rate_freq
-              - rate_per
-              - target
-              type: object
-            metrics:
-              properties:
-                delay:
+                method:
                   type: string
-                deployment_name:
-                  type: string
-                namespace:
+                url:
                   type: string
               required:
-              - delay
-              - deployment_name
-              - namespace
+              - method
+              - url
               type: object
           required:
-          - loader
-          - metrics
+          - duration
+          - name
+          - rate_freq
+          - rate_per
+          - target
           type: object
         status:
-          description: LoadServiceStatus defines the observed state of LoadService
+          description: HttpLoadServiceStatus defines the observed state of HttpLoadService
           type: object
       type: object
-  version: v1
+  version: v1alpha1
   versions:
-  - name: v1
+  - name: v1alpha1
     served: true
     storage: true
 status:

@@ -2,13 +2,15 @@ package usecase
 
 import (
 	"context"
-	cachev1 "github.com/kozmod/load-operator/apis/cache/v1"
+	"github.com/kozmod/load-operator/apis/load/v1alpha1"
+	vegeta "github.com/tsenart/vegeta/v12/lib"
 )
 
-type loader interface {
-	Load(loadService cachev1.LoadService) error
+type loadUC interface {
+	Load(v1alpha1.HttpLoadService) error
+	Metrics() (vegeta.Metrics, error)
 }
 
-type scheduleExecutor interface {
-	Schedule(context.Context, cachev1.LoadService) error
+type scheduleUC interface {
+	Schedule(context.Context, v1alpha1.MetricsService) error
 }

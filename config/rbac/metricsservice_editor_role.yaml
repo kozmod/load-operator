@@ -1,0 +1,24 @@
+# permissions for end users to edit metricsservices.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: metricsservice-editor-role
+rules:
+- apiGroups:
+  - load.load-operator.com
+  resources:
+  - metricsservices
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - load.load-operator.com
+  resources:
+  - metricsservices/status
+  verbs:
+  - get

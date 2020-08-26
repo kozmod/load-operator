@@ -27,8 +27,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	cachev1 "github.com/kozmod/load-operator/apis/cache/v1"
-	cachecontroller "github.com/kozmod/load-operator/controllers/cache"
+	loadv1alpha1 "github.com/kozmod/load-operator/apis/load/v1alpha1"
+	loadcontroller "github.com/kozmod/load-operator/controllers/load"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -40,7 +40,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(cachev1.AddToScheme(scheme))
+	utilruntime.Must(loadv1alpha1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -67,12 +67,36 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&cachecontroller.LoadServiceReconciler{
+	if err = (&loadcontroller.MetricsServiceReconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("LoadService"),
+		Log:    ctrl.Log.WithName("controllers").WithName("MetricsService"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "LoadService")
+		setupLog.Error(err, "unable to create controller", "controller", "MetricsService")
+		os.Exit(1)
+	}
+	if err = (&loadcontroller.HttpLoadServiceReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("HttpLoadService"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "HttpLoadService")
+		os.Exit(1)
+	}
+	if err = (&loadcontroller.HttpLoadServiceReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("HttpLoadService"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "HttpLoadService")
+		os.Exit(1)
+	}
+	if err = (&loadcontroller.HttpLoadServiceReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("HttpLoadService"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "HttpLoadService")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

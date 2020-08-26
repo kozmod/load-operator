@@ -19,9 +19,16 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cache.load-operator.com
+  - ""
   resources:
-  - loadservices
+  - pods
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - load.load-operator.com
+  resources:
+  - httploadservices
   verbs:
   - create
   - delete
@@ -31,17 +38,30 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cache.load-operator.com
+  - load.load-operator.com
   resources:
-  - loadservices/status
+  - httploadservices/status
   verbs:
   - get
   - patch
   - update
 - apiGroups:
-  - ""
+  - load.load-operator.com
   resources:
-  - pods
+  - metricsservices
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - load.load-operator.com
+  resources:
+  - metricsservices/status
+  verbs:
+  - get
+  - patch
+  - update

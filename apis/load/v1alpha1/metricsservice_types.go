@@ -14,41 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1
+package v1alpha1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// LoadServiceSpec defines the desired state of LoadService
-type LoadServiceSpec struct {
-	Metrics Metrics `json:"metrics"`
-	Loader  Loader  `json:"loader"`
-}
-
-type Metrics struct {
+// MetricsServiceSpec defines the desired state of MetricsService
+type MetricsServiceSpec struct {
 	Namespace      string          `json:"namespace"`
 	DeploymentName string          `json:"deployment_name"`
 	Duration       metav1.Duration `json:"delay"`
 }
 
-type Loader struct {
-	RateFreq int             `json:"rate_freq"`
-	RatePer  metav1.Duration `json:"rate_per"`
-	Duration metav1.Duration `json:"duration"`
-	Target   Target          `json:"target"`
-	Name     string          `json:"name"`
-}
-
-type Target struct {
-	Method string              `json:"method"`
-	URL    string              `json:"url"`
-	Header map[string][]string `json:"header,omitempty"`
-}
-
-// LoadServiceStatus defines the observed state of LoadService
-type LoadServiceStatus struct {
+// MetricsServiceStatus defines the observed state of MetricsService
+type MetricsServiceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -56,24 +39,24 @@ type LoadServiceStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// LoadService is the Schema for the loadservices API
-type LoadService struct {
+// MetricsService is the Schema for the metricsservices API
+type MetricsService struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   LoadServiceSpec   `json:"spec,omitempty"`
-	Status LoadServiceStatus `json:"status,omitempty"`
+	Spec   MetricsServiceSpec   `json:"spec,omitempty"`
+	Status MetricsServiceStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// LoadServiceList contains a list of LoadService
-type LoadServiceList struct {
+// MetricsServiceList contains a list of MetricsService
+type MetricsServiceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []LoadService `json:"items"`
+	Items           []MetricsService `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&LoadService{}, &LoadServiceList{})
+	SchemeBuilder.Register(&MetricsService{}, &MetricsServiceList{})
 }

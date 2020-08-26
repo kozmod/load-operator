@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-logr/logr"
-	cachev1 "github.com/kozmod/load-operator/apis/cache/v1"
+	loadv1alpha1 "github.com/kozmod/load-operator/apis/load/v1alpha1"
 	"github.com/pkg/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -17,23 +17,23 @@ import (
 
 const appLabel = "app"
 
-type Metrics struct {
+type UseCase struct {
 	conf   *rest.Config
 	client client.Client
 	log    logr.Logger
 }
 
-func NewMetrics(conf *rest.Config, cl client.Client, l logr.Logger) *Metrics {
-	return &Metrics{
+func New(conf *rest.Config, cl client.Client, l logr.Logger) *UseCase {
+	return &UseCase{
 		conf:   conf,
 		client: cl,
 		log:    l,
 	}
 }
 
-func (s *Metrics) Get(ctx context.Context, loadService cachev1.LoadService) (map[*corev1.Pod]*v1beta1.PodMetrics, error) {
-	namespace := loadService.Spec.Metrics.Namespace
-	deploymentName := loadService.Spec.Metrics.DeploymentName
+func (s *UseCase) Get(ctx context.Context, ms loadv1alpha1.MetricsService) (map[*corev1.Pod]*v1beta1.PodMetrics, error) {
+	namespace := ms.Spec.Namespace
+	deploymentName := ms.Spec.DeploymentName
 	pods, err := s.getPodList(ctx, namespace, deploymentName)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (s *Metrics) Get(ctx context.Context, loadService cachev1.LoadService) (map
 	return metrics, nil
 }
 
-func (s *Metrics) getPodList(ctx context.Context, namespace, deploymentName string) (*corev1.PodList, error) {
+func (s *UseCase) getPodList(ctx context.Context, namespace, deploymentName string) (*corev1.PodList, error) {
 	deployment := &appsv1.Deployment{}
 	if err := s.client.Get(ctx, client.ObjectKey{
 		Namespace: namespace,
@@ -64,7 +64,7 @@ func (s *Metrics) getPodList(ctx context.Context, namespace, deploymentName stri
 	return pods, nil
 }
 
-func (s *Metrics) getMetrics(ctx context.Context, pods *corev1.PodList, namespace string) (map[*corev1.Pod]*v1beta1.PodMetrics, error) {
+func (s *UseCase) getMetrics(ctx context.Context, pods *corev1.PodList, namespace string) (map[*corev1.Pod]*v1beta1.PodMetrics, error) {
 	clientset, err := metricsv.NewForConfig(s.conf)
 	if err != nil {
 		return nil, errors.WithMessage(err, "create clientset error")

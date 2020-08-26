@@ -1,0 +1,8 @@
+apiVersion: load.load-operator.com/v1alpha1
+kind: MetricsService
+metadata:
+  name: metricsservice-sample
+spec:
+  namespace: default
+  deployment_name: go-http2-server
+  delay: 30s

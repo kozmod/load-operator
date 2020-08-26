@@ -3,7 +3,7 @@ package schedule
 import (
 	"context"
 	"github.com/go-logr/logr"
-	cachev1 "github.com/kozmod/load-operator/apis/cache/v1"
+	loadv1alpha1 "github.com/kozmod/load-operator/apis/load/v1alpha1"
 	"github.com/kozmod/load-operator/domain/internal/executor/instant"
 )
 
@@ -20,10 +20,10 @@ func NewScheduleUseCase(uc useCase, l logr.Logger) *UseCase {
 	}
 }
 
-func (s *UseCase) Schedule(ctx context.Context, loadService cachev1.LoadService) error {
+func (s *UseCase) Schedule(ctx context.Context, ms loadv1alpha1.MetricsService) error {
 	ctx, cancel := context.WithCancel(ctx)
-	ts := instant.NewScheduleExecutor(loadService.Spec.Metrics.Duration.Duration, func() {
-		err := s.useCase.Apply(ctx, *loadService.DeepCopy())
+	ts := instant.NewScheduleExecutor(ms.Spec.Duration.Duration, func() {
+		err := s.useCase.Apply(ctx, *ms.DeepCopy())
 		if err != nil {
 			s.log.Error(err, "schedule execute error")
 		}
