@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"sync"
+
 	"github.com/go-logr/logr"
 	"github.com/kozmod/load-operator/apis/load/v1alpha1"
 	"github.com/kozmod/load-operator/domain/load/http/usecase"
@@ -10,7 +12,6 @@ import (
 	"github.com/kozmod/load-operator/domain/metrics/usecase/internal/schedule"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sync"
 )
 
 var once sync.Once
@@ -36,7 +37,7 @@ func Load(ls v1alpha1.HttpLoadService) error {
 
 func InitScheduleUseCase(cl client.Client, l logr.Logger) {
 	once.Do(func() {
-		config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:55162"}) //todo local test
+		config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:57927"}) //todo local test
 		//config := rest.InClusterConfig() //todo in cluster
 		//if err != nil {
 		//	fmt.Println("rest error")

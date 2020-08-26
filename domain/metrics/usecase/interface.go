@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"github.com/kozmod/load-operator/apis/load/v1alpha1"
 	vegeta "github.com/tsenart/vegeta/v12/lib"
 )

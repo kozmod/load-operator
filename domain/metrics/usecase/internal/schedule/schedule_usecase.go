@@ -2,12 +2,15 @@ package schedule
 
 import (
 	"context"
+	"sync"
+
 	"github.com/go-logr/logr"
 	loadv1alpha1 "github.com/kozmod/load-operator/apis/load/v1alpha1"
 	"github.com/kozmod/load-operator/domain/internal/executor/instant"
 )
 
 type UseCase struct {
+	mutex      sync.Mutex
 	useCase    useCase
 	cancelFunc context.CancelFunc
 	log        logr.Logger
@@ -21,6 +24,8 @@ func NewScheduleUseCase(uc useCase, l logr.Logger) *UseCase {
 }
 
 func (s *UseCase) Schedule(ctx context.Context, ms loadv1alpha1.MetricsService) error {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
 	ctx, cancel := context.WithCancel(ctx)
 	ts := instant.NewScheduleExecutor(ms.Spec.Duration.Duration, func() {
 		err := s.useCase.Apply(ctx, *ms.DeepCopy())

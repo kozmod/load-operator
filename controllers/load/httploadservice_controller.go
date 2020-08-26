@@ -18,8 +18,9 @@ package controllers
 
 import (
 	"context"
-	"github.com/kozmod/load-operator/domain/metrics/usecase"
 	"time"
+
+	"github.com/kozmod/load-operator/domain/metrics/usecase"
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"

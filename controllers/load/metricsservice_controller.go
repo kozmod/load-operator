@@ -18,12 +18,13 @@ package controllers
 
 import (
 	"context"
+	"time"
+
 	"github.com/go-logr/logr"
 	"github.com/kozmod/load-operator/domain/metrics/usecase"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"time"
 
 	loadv1alpha1 "github.com/kozmod/load-operator/apis/load/v1alpha1"
 )

@@ -2,9 +2,10 @@ package utc
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestBetweenOrDefault_DefaultWhenBothNil(t *testing.T) {

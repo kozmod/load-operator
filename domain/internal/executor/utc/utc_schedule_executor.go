@@ -2,8 +2,9 @@ package utc
 
 import (
 	"context"
-	"github.com/kozmod/load-operator/domain/internal/executor"
 	"time"
+
+	"github.com/kozmod/load-operator/domain/internal/executor"
 )
 
 const defaultDuration = 1 * time.Second

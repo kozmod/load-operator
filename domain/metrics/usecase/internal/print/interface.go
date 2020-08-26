@@ -2,6 +2,7 @@ package print
 
 import (
 	"context"
+
 	vegeta "github.com/tsenart/vegeta/v12/lib"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/metrics/pkg/apis/metrics/v1beta1"
