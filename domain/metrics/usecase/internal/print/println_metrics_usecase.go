@@ -1,4 +1,4 @@
-package internal
+package print
 
 import (
 	"context"
@@ -7,22 +7,25 @@ import (
 )
 
 type PrintlnMetrics struct {
-	metrics Metrics
-	log     logr.Logger
+	k8sMetrics    metrics
+	loaderMetrics loader
+	log           logr.Logger
 }
 
-func NewPrint(m Metrics, l logr.Logger) *PrintlnMetrics {
+func NewPrint(m metrics, ldr loader, l logr.Logger) *PrintlnMetrics {
 	return &PrintlnMetrics{
-		metrics: m,
-		log:     l,
+		k8sMetrics:    m,
+		loaderMetrics: ldr,
+		log:           l,
 	}
 }
 
 func (uc *PrintlnMetrics) Apply(ctx context.Context, loadService v1.LoadService) error {
-	metrics, err := uc.metrics.Get(ctx, loadService)
+	metrics, err := uc.k8sMetrics.Get(ctx, loadService)
 	if err != nil {
 		return err
 	}
+	uc.log.Info("loader metrics\n", "loader", uc.loaderMetrics.Metrics())
 	for k, v := range metrics {
 		uc.log.Info("metrics\n", "pod", *k)
 		uc.log.Info("metrics\n", "metrics", *v)

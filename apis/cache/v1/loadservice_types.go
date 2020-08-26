@@ -16,18 +16,35 @@ limitations under the License.
 
 package v1
 
-import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
+import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // LoadServiceSpec defines the desired state of LoadService
 type LoadServiceSpec struct {
+	Metrics Metrics `json:"metrics"`
+	Loader  Loader  `json:"loader"`
+}
+
+type Metrics struct {
 	Namespace      string          `json:"namespace"`
 	DeploymentName string          `json:"deployment_name"`
-	Delay          metav1.Duration `json:"delay"`
+	Duration       metav1.Duration `json:"delay"`
+}
+
+type Loader struct {
+	RateFreq int             `json:"rate_freq"`
+	RatePer  metav1.Duration `json:"rate_per"`
+	Duration metav1.Duration `json:"duration"`
+	Target   Target          `json:"target"`
+	Name     string          `json:"name"`
+}
+
+type Target struct {
+	Method string              `json:"method"`
+	URL    string              `json:"url"`
+	Header map[string][]string `json:"header,omitempty"`
 }
 
 // LoadServiceStatus defines the observed state of LoadService

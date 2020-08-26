@@ -8,7 +8,7 @@ require (
 	github.com/onsi/gomega v1.8.1
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.4.0
-	golang.org/x/tools v0.0.0-20190920225731-5eefd052ad72
+	github.com/tsenart/vegeta/v12 v12.8.3
 	k8s.io/api v0.18.6
 	k8s.io/apimachinery v0.18.6
 	k8s.io/client-go v0.18.6

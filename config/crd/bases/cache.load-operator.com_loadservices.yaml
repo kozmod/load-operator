@@ -36,16 +36,55 @@ spec:
         spec:
           description: LoadServiceSpec defines the desired state of LoadService
           properties:
-            delay:
-              type: string
-            deployment_name:
-              type: string
-            namespace:
-              type: string
+            loader:
+              properties:
+                duration:
+                  type: string
+                name:
+                  type: string
+                rate_freq:
+                  type: integer
+                rate_per:
+                  type: string
+                target:
+                  properties:
+                    header:
+                      additionalProperties:
+                        items:
+                          type: string
+                        type: array
+                      type: object
+                    method:
+                      type: string
+                    url:
+                      type: string
+                  required:
+                  - method
+                  - url
+                  type: object
+              required:
+              - duration
+              - name
+              - rate_freq
+              - rate_per
+              - target
+              type: object
+            metrics:
+              properties:
+                delay:
+                  type: string
+                deployment_name:
+                  type: string
+                namespace:
+                  type: string
+              required:
+              - delay
+              - deployment_name
+              - namespace
+              type: object
           required:
-          - delay
-          - deployment_name
-          - namespace
+          - loader
+          - metrics
           type: object
         status:
           description: LoadServiceStatus defines the observed state of LoadService

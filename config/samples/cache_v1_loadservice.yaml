@@ -3,6 +3,17 @@ kind: LoadService
 metadata:
   name: loadservice-sample
 spec:
-  namespace: default
-  deployment_name: go-http2-server
-  delay: 10s
+  metrics:
+    namespace: default
+    deployment_name: go-http2-server
+    delay: 10s
+  loader:
+    name: test_loader
+    rate_freq: 1000
+    rate_per: 1s
+    duration: 10m
+    target:
+      method: GET
+      url: http://go-http2-server:80/hp
+      header:
+        Host:

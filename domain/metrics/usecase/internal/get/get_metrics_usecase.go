@@ -1,4 +1,4 @@
-package internal
+package get
 
 import (
 	"context"
@@ -32,8 +32,8 @@ func NewMetrics(conf *rest.Config, cl client.Client, l logr.Logger) *Metrics {
 }
 
 func (s *Metrics) Get(ctx context.Context, loadService cachev1.LoadService) (map[*corev1.Pod]*v1beta1.PodMetrics, error) {
-	namespace := loadService.Spec.Namespace
-	deploymentName := loadService.Spec.DeploymentName
+	namespace := loadService.Spec.Metrics.Namespace
+	deploymentName := loadService.Spec.Metrics.DeploymentName
 	pods, err := s.getPodList(ctx, namespace, deploymentName)
 	if err != nil {
 		return nil, err

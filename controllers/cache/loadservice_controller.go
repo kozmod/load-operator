@@ -51,15 +51,15 @@ func (r *LoadServiceReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 	if err := r.Get(ctx, req.NamespacedName, loadService); err != nil {
 		return ctrl.Result{}, err
 	}
-	config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:64174"}) //todo local test
+	config := rest.AnonymousClientConfig(&rest.Config{Host: "127.0.0.1:64931"}) //todo local test
 	//config := rest.InClusterConfig() //todo in cluster
 	//if err != nil {
 	//	fmt.Println("rest error")
 	//	panic(err.Error())
 	//}
-	uc := usecase.Init(config, r.Client, l)
+	uc := usecase.TryInit(config, r.Client, l)
 
-	if err := uc.Schedule(ctx, *loadService.DeepCopy()); err != nil {
+	if err := uc.Apply(ctx, *loadService.DeepCopy()); err != nil {
 		r.Log.Error(err, "usecase error")
 		return ctrl.Result{RequeueAfter: 10 * time.Second}, err
 	}
